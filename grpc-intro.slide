@@ -142,7 +142,9 @@ You'll need some pre-requisites installed:
 *Install:* [[https://github.com/grpc/grpc/tree/master/src/node]]
 *Generate:* N/A - dynamically reads `.proto` file.
 *Client:*
+
 .code client.js
+
   $ node client.js 1 2
 
 * Multi-language Support (Ruby)
@@ -152,7 +154,9 @@ You'll need some pre-requisites installed:
   $ protoc --ruby_out=lib --grpc_out=lib --plugin=protoc-gen-grpc=`which grpc_ruby_plugin` add.proto
 
 *Client:*
+
 .code client.rb
+
   $ ruby client.rb 1 2
 
 * What Else?

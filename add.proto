@@ -1,0 +1,12 @@
+syntax = "proto3";
+package main;
+message NumericRequest {
+ int32 v1 = 1;
+ int32 v2 = 2;
+}
+message NumericResponse {
+ int32 r = 1;
+}
+service Test {
+ rpc Add(NumericRequest) returns (NumericResponse) {}
+}

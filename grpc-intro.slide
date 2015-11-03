@@ -1,0 +1,134 @@
+gRPC Intro
+Easy microservice RPC over HTTP/2
+3 Nov 2015
+Tags: grcp
+
+Peter P. Gengler
+Sr. Software Engineer, JumpCloud
+https://github.com/ppg
+https://go-talks.appspot.com/github.com/ppg/grpc-intro/grpc-intro.slide
+
+* What is gRPC?
+
+"general RPC over HTTP/2"
+
+- protobuf messages - DSL for describing messages, efficient binary serialization protocol, multiple language support.
+- service - Interface Definition Language (IDL),  multiple languages support.
+- `*.proto` - write protobuf and service in this file, generate output files (for static languages) or consume directly (in dynamic language).
+
+* Why gRPC?
+
+- Define service in IDL; generate/consume for boiler-plate routing; *but* type-safe with Go still.
+- Define message types one time, utilize pre-defined serialization.
+- - You've probably manually done this for REST services, now just let code generate.
+- Break apart functionality into isolated function per service -> microservices.
+- Support consistent interface between different languages.
+
+* Getting Started
+You'll need some pre-requisites installed:
+
+*protoc:* [[https://github.com/google/protobuf#c-installation---unix]]
+
+- compiles `*.proto` files into output language.
+- supports plugin tools; gRPC is one as an example.
+
+*grpc:* go get google.golang.org/grpc
+
+- library for common Go code, like `grpc.Server` and `grpc.ClientConn`.
+- works in conjuction with code generated from `protoc`.
+
+* Our example proto file
+.code add.proto
+
+- `syntax` calls out we're using proto3 (vs. proto2).
+- `package`main` since our code will be generated in top-level directory.
+- messages are composed of fields.
+- fields are type, name, packing order; *don't*change*packing*order*once*released*.
+- `rpc` defines methods to call within service.
+
+* Generated code:
+
+  $ protoc --go_out=plugins=grpc:. add.proto
+
+- protoc is the (C-compiled) binary that reads `*.proto` and helps generates output.
+- `--go_out` means look for `protoc-gen-go` binary and pass in parsed `.proto` file to it.
+- `protoc-gen-go` generates the actual Go code.
+- `grpc` is a 'plugin' with options; but their loading system isn't extensible.
+- - However, `protoc`--foo_out=.`add.proto` will run `protoc-gen-foo`.
+
+* Generated code (messages) - `add.pb.go`:
+.code add.pb.go /type NumericRequest struct/,/}/
+.code add.pb.go /type NumericResponse struct/,/}/
+- Generates a struct for each message type.
+- grpc-go library uses `protobuf` tag with details for serialization/deserialization.
+- Makes sure all fields are exported.
+
+* Generated code (service server) - `add.pb.go`:
+.code add.pb.go /type TestServer interface/,/}/
+.code add.pb.go /func RegisterTestServer/,/}/
+- Defines the interface that any code implementing this service must meet.
+- Defines a function to attach an implementation (`TestServer`) to the gRPC server.
+- All calls take a [[https://godoc.org/golang.org/x/net/context][context]] for things like timeout, cancel, etc.
+- All calls take the request, and return a response and an error.
+- *NOTE:* This is fully type safe, no need to do interface conversions.
+
+
+* Generated code (service client) - `add.pb.go`:
+.code add.pb.go /type TestClient interface/,/}/
+.code add.pb.go /func NewTestClient/,/[^c]}/
+- Defines an interface any client must meet.
+- Defines a client that will talk to the generated server.
+- All calls take a [[https://godoc.org/golang.org/x/net/context][context]] for things like timeout, cancel, etc.
+- All calls take optional `CallOption` to do things like before and after call handlers.
+- *NOTE:* This is fully type safe, cannot call with wrong types.
+
+* User code (Insecure):
+
+.link server.go
+
+  $ go run server.go add.pb.go
+
+.link client.go
+
+  $ go run client.go add.pb.go 1 2
+
+- Minimal code to decide transport information and configuration.
+- Extensible through `ServerOption`, `DialOption` and `CallOption` interfaces.
+
+* User code (Secure):
+
+.link server_tls.go
+
+  $ go run server_tls.go add.pb.go
+
+.link client_tls.go
+
+  $ go run client_tls.go add.pb.go 1 2
+
+- Additional complexity to load certs, but no more.
+- `NewServerTLSFromFile` and `NewClientTLSFromFile` are helper functions, can really do most things with TLS creds.
+
+* Multi-language Support
+
+*Node.js:* [[https://github.com/grpc/grpc/tree/master/src/node][Install]]
+.link client.js
+
+  $ node client.js 1 2
+
+*Ruby*: `gem`install`grpc`
+.link client.rb
+
+  $ ruby client.rb 1 2
+
+* What Else?
+
+- HTTP/2 has streaming support, gRPC supports natively.
+- - reduce connection overhead.
+- - use like channel communication, but external vs. internal comms.
+- `protoc` is extensible; generate code vs. type unsafe hooks.
+- - i.e. [[https://github.com/gengo/grpc-gateway][grpc-gateway]] to provide HTTP RESTful JSON for service.
+- Mostly stable, but active:
+- - i.e. [[https://github.com/grpc/grpc-java/issues/428][Client-side load balancing]] in the works.
+- One of many microservice options:
+- - [[https://github.com/go-kit/kit][go-kit]] - less type-safe, more extensible; can use gRPC; could port concepts into gRPC needs.
+- - [[https://github.com/myodc/go-micro][go-micro]] - another flexible option, more REST like; again porting options.

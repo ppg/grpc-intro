@@ -9,20 +9,19 @@ import (
 	"google.golang.org/grpc"
 )
 
-func main() {
+func parseArguments() (int, int) {
 	flag.Parse()
 	args := flag.Args()
 	v1, _ := strconv.Atoi(args[0])
 	v2, _ := strconv.Atoi(args[1])
+	return v1, v2
+}
 
-	// Accumulate gRPC options
-	var opts []grpc.DialOption
+func main() {
+	v1, v2 := parseArguments()
 
-	// Connect via insecure
-	opts = append(opts, grpc.WithInsecure())
-
-	// Dial the server
-	conn, err := grpc.Dial("127.0.0.1:1234", opts...)
+	// Dial the server insecurely
+	conn, err := grpc.Dial("127.0.0.1:1234", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalln("fail to dial:", err)
 	}

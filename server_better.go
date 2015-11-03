@@ -1,12 +1,32 @@
 package main
 
 import (
+	"fmt"
 	"net"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
 )
+
+// START SERVICE IMPLEMENTATION OMIT
+type testBetterService struct {
+}
+
+func (s *testBetterService) Add(ctx context.Context, req *BetterNumericRequest) (*BetterNumericResponse, error) {
+	var sum int32
+	for _, v := range req.Values {
+		grpclog.Printf(" + %v", v)
+		sum += v
+	}
+	prefix := fmt.Sprintf("This is type %d", req.Type)
+	if req.Type == TestType_TYPE_1 {
+		prefix = "Everything is awesome"
+	}
+	return &BetterNumericResponse{Prefix: prefix, R: sum}, nil
+}
+
+// END SERVICE IMPLEMENTATION OMIT
 
 func main() {
 	// Create a TCP listener like you normally would
@@ -31,23 +51,4 @@ func main() {
 	if err != nil {
 		grpclog.Fatalf("failed to serve: %v", err)
 	}
-}
-
-type testBetterService struct {
-}
-
-func (s *testBetterService) Add(ctx context.Context, req *BetterNumericRequest) (*BetterNumericResponse, error) {
-	var sum int32
-	for _, v := range req.Values {
-		grpclog.Printf(" + %v", v)
-		sum += v
-	}
-	prefix := ""
-	switch req.Type {
-	case TestType_TYPE_0:
-		prefix = "This is type 0"
-	case TestType_TYPE_1:
-		prefix = "This is type 1"
-	}
-	return &BetterNumericResponse{Prefix: prefix, R: sum}, nil
 }

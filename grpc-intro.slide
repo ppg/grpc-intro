@@ -52,18 +52,18 @@ You'll need some pre-requisites installed:
 
 - protoc is the (C-compiled) binary that reads `*.proto` and helps generates output.
 - `--go_out` means look for `protoc-gen-go` binary and pass in parsed `.proto` file to it.
-- `protoc-gen-go` generates the actual Go code.
+- `protoc-gen-go` generates the actual Go code; in this case to `add.pb.proto`.
 - `grpc` is a 'plugin' with options; but their loading system isn't extensible.
 - - However, `protoc`--foo_out=.`add.proto` will run `protoc-gen-foo`.
 
-* Generated code (messages) - `add.pb.go`:
+* Generated code (messages):
 .code add.pb.go /type NumericRequest struct/,/}/
 .code add.pb.go /type NumericResponse struct/,/}/
 - Generates a struct for each message type.
 - grpc-go library uses `protobuf` tag with details for serialization/deserialization.
 - Makes sure all fields are exported.
 
-* Generated code (service server) - `add.pb.go`:
+* Generated code (service server):
 .code add.pb.go /type TestServer interface/,/}/
 .code add.pb.go /func RegisterTestServer/,/}/
 - Defines the interface that any code implementing this service must meet.
@@ -73,7 +73,7 @@ You'll need some pre-requisites installed:
 - *NOTE:* This is fully type safe, no need to do interface conversions.
 
 
-* Generated code (service client) - `add.pb.go`:
+* Generated code (service client):
 .code add.pb.go /type TestClient interface/,/}/
 .code add.pb.go /func NewTestClient/,/[^c]}/
 - Defines an interface any client must meet.

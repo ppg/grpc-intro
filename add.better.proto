@@ -1,0 +1,17 @@
+syntax = "proto3";
+package main;
+enum TestType {
+  TYPE_0 = 0;
+  TYPE_1 = 1;
+}
+message BetterNumericRequest {
+  TestType type = 1;
+  repeated int32 values = 2;
+}
+message BetterNumericResponse {
+  string prefix = 1;
+  int32 r = 2;
+}
+service BetterTest {
+  rpc Add(BetterNumericRequest) returns (BetterNumericResponse) {}
+}

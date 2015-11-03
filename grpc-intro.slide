@@ -108,6 +108,19 @@ You'll need some pre-requisites installed:
 - Additional complexity to load certs, but no more.
 - `NewServerTLSFromFile` and `NewClientTLSFromFile` are helper functions, can really do most things with TLS creds.
 
+* User code (More features):
+
+.link server_better.go
+
+  $ go run server_better.go add.better.pb.go
+
+.link client_tls.go
+
+  $ go run client_better.go add.better.pb.go 1 2 3 4
+
+- Shows how to use `enum`.
+- Shows how to use `repeated`.
+
 * Multi-language Support
 
 *Node.js:* [[https://github.com/grpc/grpc/tree/master/src/node][Install]]

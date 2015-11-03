@@ -84,11 +84,11 @@ You'll need some pre-requisites installed:
 
 * User code (Insecure):
 
-.link server.go
+.link https://github.com/ppg/grpc-intro/blob/master/server.go server.go
 
   $ go run server.go add.pb.go
 
-.link client.go
+.link https://github.com/ppg/grpc-intro/blob/master/client.go client.go
 
   $ go run client.go add.pb.go 1 2
 
@@ -97,11 +97,11 @@ You'll need some pre-requisites installed:
 
 * User code (Secure):
 
-.link server_tls.go
+.link https://github.com/ppg/grpc-intro/blob/master/server_tls.go server_tls.go
 
   $ go run server_tls.go add.pb.go
 
-.link client_tls.go
+.link https://github.com/ppg/grpc-intro/blob/master/client_tls.go client_tls.go
 
   $ go run client_tls.go add.pb.go 1 2
 
@@ -110,13 +110,13 @@ You'll need some pre-requisites installed:
 
 * User code (More features):
 
-.link server_better.go
+.link https://github.com/ppg/grpc-intro/blob/master/server_better.go server_better.go
 
   $ go run server_better.go add.better.pb.go
 
-.link client_tls.go
+.link https://github.com/ppg/grpc-intro/blob/master/client_better.go client_better.go
 
-  $ go run client_better.go add.better.pb.go 1 2 3 4
+  $ go run client_better.go add.better.pb.go 1 1 2 3 4
 
 - Shows how to use `enum`.
 - Shows how to use `repeated`.
@@ -124,12 +124,12 @@ You'll need some pre-requisites installed:
 * Multi-language Support
 
 *Node.js:* [[https://github.com/grpc/grpc/tree/master/src/node][Install]]
-.link client.js
+.link https://github.com/ppg/grpc-intro/blob/master/client.js client.js
 
   $ node client.js 1 2
 
 *Ruby*: `gem`install`grpc`
-.link client.rb
+.link https://github.com/ppg/grpc-intro/blob/master/client.rb client.rb
 
   $ ruby client.rb 1 2
 

@@ -6,15 +6,17 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
+
+	pb "github.com/ppg/grpc-intro/proto"
 )
 
 // START SERVICE IMPLEMENTATION OMIT
 type testService struct {
 }
 
-func (s *testService) Add(ctx context.Context, req *NumericRequest) (*NumericResponse, error) {
+func (s *testService) Add(ctx context.Context, req *pb.NumericRequest) (*pb.NumericResponse, error) {
 	grpclog.Printf("v1=%d, v2=%d", req.V1, req.V2)
-	return &NumericResponse{R: req.V1 + req.V2}, nil
+	return &pb.NumericResponse{R: req.V1 + req.V2}, nil
 }
 
 // END SERVICE IMPLEMENTATION OMIT
@@ -27,7 +29,7 @@ func main() {
 
 	// Create a gRPC server and attach our service to it
 	server := grpc.NewServer()
-	RegisterTestServer(server, &testService{})
+	pb.RegisterTestServer(server, &testService{})
 
 	// Start handling requests
 	grpclog.Printf("Starting to listen on %s", listener.Addr())

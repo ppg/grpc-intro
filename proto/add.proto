@@ -1,5 +1,5 @@
 syntax = "proto3";
-package main;
+package proto;
 message NumericRequest {
   int32 v1 = 1;
   int32 v2 = 2;

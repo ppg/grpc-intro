@@ -1,16 +1,11 @@
-add.pb.go : add.proto
-	protoc --go_out=plugins=grpc:. add.proto
+%.pb.go : %.proto
+	protoc --go_out=plugins=grpc:. $<
 
-add_better.pb.go : add_better.proto
-	protoc --go_out=plugins=grpc:. add_better.proto
+lib/add.rb lib/add_services.rb : proto/add.proto
+	protoc -I proto --ruby_out=lib --grpc_out=lib --plugin=protoc-gen-grpc=`which grpc_ruby_plugin` proto/add.proto
 
-lib/add.rb : add.proto
-	protoc --ruby_out=lib --grpc_out=lib --plugin=protoc-gen-grpc=`which grpc_ruby_plugin` add.proto
-
-lib/add_services.rb : add.proto
-	protoc --ruby_out=lib --grpc_out=lib --plugin=protoc-gen-grpc=`which grpc_ruby_plugin` add.proto
-
-all: add.pb.go add_better.pb.go lib/add.rb lib/add_services.rb
+proto_targets = proto/add.pb.go proto/add_better.pb.go lib/add.rb lib/add_services.rb
+all: $(proto_targets)
 
 clean:
-	rm add.pb.go add_better.pb.go lib/add.rb lib/add_services.rb
+	rm $(proto_targets)

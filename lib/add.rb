@@ -4,16 +4,16 @@
 require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
-  add_message "main.NumericRequest" do
+  add_message "proto.NumericRequest" do
     optional :v1, :int32, 1
     optional :v2, :int32, 2
   end
-  add_message "main.NumericResponse" do
+  add_message "proto.NumericResponse" do
     optional :r, :int32, 1
   end
 end
 
-module Main
-  NumericRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("main.NumericRequest").msgclass
-  NumericResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("main.NumericResponse").msgclass
+module Proto
+  NumericRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("proto.NumericRequest").msgclass
+  NumericResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("proto.NumericResponse").msgclass
 end

@@ -14,7 +14,7 @@ type testService struct {
 }
 
 func (s *testService) Add(ctx context.Context, req *lib.NumericRequest) (*lib.NumericResponse, error) {
-	grpclog.Printf("v1=%d, v2=%s", req.V1, req.V2)
+	grpclog.Printf("v1=%d, v2=%d", req.V1, req.V2)
 	return &lib.NumericResponse{R: req.V1 + req.V2}, nil
 }
 

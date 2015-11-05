@@ -5,6 +5,7 @@ import (
 	"log"
 	"strconv"
 
+	lib "github.com/ppg/grpc-intro/lib"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
@@ -28,8 +29,8 @@ func main() {
 	defer conn.Close()
 
 	// Get a client using the connection
-	client := NewTestClient(conn)
-	resp, err := client.Add(context.Background(), &NumericRequest{V1: int32(v1), V2: int32(v2)})
+	client := lib.NewTestClient(conn)
+	resp, err := client.Add(context.Background(), &lib.NumericRequest{V1: int32(v1), V2: int32(v2)})
 	if err != nil {
 		log.Fatalln("failed server call:", err)
 	}

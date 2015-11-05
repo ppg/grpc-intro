@@ -38,7 +38,7 @@ You'll need some pre-requisites installed:
 - works in conjuction with code generated from `protoc`.
 
 * Our example proto file
-.code add.proto
+.code lib/add.proto
 
 - `syntax` calls out we're using proto3 (vs. proto2).
 - `package`main` since our code will be generated in top-level directory.
@@ -57,15 +57,15 @@ You'll need some pre-requisites installed:
 - However, `protoc`--foo_out=.`add.proto` will run `protoc-gen-foo`.
 
 * Generated code (messages):
-.code add.pb.go /type NumericRequest struct/,/}/
-.code add.pb.go /type NumericResponse struct/,/}/
+.code lib/add.pb.go /type NumericRequest struct/,/}/
+.code lib/add.pb.go /type NumericResponse struct/,/}/
 - Generates a struct for each message type.
 - grpc-go library uses `protobuf` tag with details for serialization/deserialization.
 - Makes sure all fields are exported.
 
 * Generated code (service server):
-.code add.pb.go /type TestServer interface/,/}/
-.code add.pb.go /func RegisterTestServer/,/}/
+.code lib/add.pb.go /type TestServer interface/,/}/
+.code lib/add.pb.go /func RegisterTestServer/,/}/
 - Defines the interface that any code implementing this service must meet.
 - Defines a function to attach an implementation (`TestServer`) to the gRPC server.
 - All calls take a [[https://godoc.org/golang.org/x/net/context][context]] for things like timeout, cancel, etc.
@@ -73,8 +73,8 @@ You'll need some pre-requisites installed:
 - *NOTE:* This is fully type safe, no need to do interface conversions.
 
 * Generated code (service client):
-.code add.pb.go /type TestClient interface/,/}/
-.code add.pb.go /func NewTestClient/,/[^c]}/
+.code lib/add.pb.go /type TestClient interface/,/}/
+.code lib/add.pb.go /func NewTestClient/,/[^c]}/
 - Defines an interface any client must meet.
 - Defines a client that will talk to the generated server.
 - All calls take a [[https://godoc.org/golang.org/x/net/context][context]] for things like timeout, cancel, etc.
@@ -91,11 +91,11 @@ You'll need some pre-requisites installed:
 - *NOTE:* protobuf v2 had an optional/required field, but v3 removed for some reason?
 
 * User code (Insecure Server):
-.code server.go /func main/,/^}/
+.play server.go /func main/,/^}/
 - `RegisterTestServer` is auto-generated and enforces that the service meets the interface described by the proto file.
 
 * User code (Insecure Client):
-.code client.go /func main/,/^}/
+.play client.go /func main/,/^}/
 - `NewTestClient` returns an interface that is auto-generated and therefore enforces type safety on all the RPC calls.
 
 * User code (Insecure Summary):
@@ -107,10 +107,10 @@ You'll need some pre-requisites installed:
 
 
 * User code (Secure Server):
-.code server_tls.go /func main/,/^}/
+.play server_tls.go /func main/,/^}/
 
 * User code (Secure Client):
-.code client_tls.go /func main/,/^}/
+.play client_tls.go /func main/,/^}/
 
 * User code (Secure Summary):
   $ go run server_tls.go add.pb.go
@@ -121,7 +121,7 @@ You'll need some pre-requisites installed:
 
 
 * User code (Improved API proto):
-.code add_better.proto
+.code lib/add_better.proto
 - Shows how to use `enum`.
 - Shows how to use `repeated`.
 

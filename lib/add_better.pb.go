@@ -12,7 +12,7 @@ It has these top-level messages:
 	BetterNumericRequest
 	BetterNumericResponse
 */
-package main
+package lib
 
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"

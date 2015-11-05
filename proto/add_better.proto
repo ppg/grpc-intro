@@ -1,5 +1,5 @@
 syntax = "proto3";
-package main;
+package proto;
 enum TestType {
   TYPE_0 = 0;
   TYPE_1 = 1;

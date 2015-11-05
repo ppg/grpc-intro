@@ -38,7 +38,7 @@ You'll need some pre-requisites installed:
 - works in conjuction with code generated from `protoc`.
 
 * Our example proto file
-.code lib/add.proto
+.code proto/add.proto
 
 - `syntax` calls out we're using proto3 (vs. proto2).
 - `package`main` since our code will be generated in top-level directory.
@@ -57,15 +57,15 @@ You'll need some pre-requisites installed:
 - However, `protoc`--foo_out=.`add.proto` will run `protoc-gen-foo`.
 
 * Generated code (messages):
-.code lib/add.pb.go /type NumericRequest struct/,/}/
-.code lib/add.pb.go /type NumericResponse struct/,/}/
+.code proto/add.pb.go /type NumericRequest struct/,/}/
+.code proto/add.pb.go /type NumericResponse struct/,/}/
 - Generates a struct for each message type.
 - grpc-go library uses `protobuf` tag with details for serialization/deserialization.
 - Makes sure all fields are exported.
 
 * Generated code (service server):
-.code lib/add.pb.go /type TestServer interface/,/}/
-.code lib/add.pb.go /func RegisterTestServer/,/}/
+.code proto/add.pb.go /type TestServer interface/,/}/
+.code proto/add.pb.go /func RegisterTestServer/,/}/
 - Defines the interface that any code implementing this service must meet.
 - Defines a function to attach an implementation (`TestServer`) to the gRPC server.
 - All calls take a [[https://godoc.org/golang.org/x/net/context][context]] for things like timeout, cancel, etc.
@@ -73,8 +73,8 @@ You'll need some pre-requisites installed:
 - *NOTE:* This is fully type safe, no need to do interface conversions.
 
 * Generated code (service client):
-.code lib/add.pb.go /type TestClient interface/,/}/
-.code lib/add.pb.go /func NewTestClient/,/[^c]}/
+.code proto/add.pb.go /type TestClient interface/,/}/
+.code proto/add.pb.go /func NewTestClient/,/[^c]}/
 - Defines an interface any client must meet.
 - Defines a client that will talk to the generated server.
 - All calls take a [[https://godoc.org/golang.org/x/net/context][context]] for things like timeout, cancel, etc.
@@ -82,7 +82,7 @@ You'll need some pre-requisites installed:
 - *NOTE:* This is fully type safe, cannot call with wrong types.
 
 
-* User code (Service Implementation):
+* User Code (Service Implementation):
 .code server.go /START SERVICE IMPLEMENTATION OMIT/,/END SERVICE IMPLEMENTATION OMIT/
 
 - `context.Context` used for things like timeout, cancel, etc.
@@ -90,49 +90,42 @@ You'll need some pre-requisites installed:
 - However, can be zero value so must check that still.
 - *NOTE:* protobuf v2 had an optional/required field, but v3 removed for some reason?
 
-* User code (Insecure Server):
+* User Code (Insecure Server):
 .play server.go /func main/,/^}/
 - `RegisterTestServer` is auto-generated and enforces that the service meets the interface described by the proto file.
 
-* User code (Insecure Client):
+* User Code (Insecure Client):
 .play client.go /func main/,/^}/
 - `NewTestClient` returns an interface that is auto-generated and therefore enforces type safety on all the RPC calls.
 
-* User code (Insecure Summary):
-  $ go run server.go add.pb.go
-  $ go run client.go add.pb.go 1 2
 
-- Minimal code to decide transport information and configuration.
-- Extensible through `ServerOption`, `DialOption` and `CallOption` interfaces.
-
-
-* User code (Secure Server):
+* User Code (Secure Server):
 .play server_tls.go /func main/,/^}/
 
-* User code (Secure Client):
+* User Code (Secure Client):
 .play client_tls.go /func main/,/^}/
 
-* User code (Secure Summary):
-  $ go run server_tls.go add.pb.go
-  $ go run client_tls.go add.pb.go 1 2
 
-- Additional complexity to load certs and let Server/Dialer know, but no more.
-- `NewServerTLSFromFile` and `NewClientTLSFromFile` are helper functions, can really do more things with TLS creds if desired (i.e. mutual TLS).
-
-
-* User code (Improved API proto):
-.code lib/add_better.proto
+* User Code (Improved API proto):
+.code proto/add_better.proto
 - Shows how to use `enum`.
 - Shows how to use `repeated`.
 
-* User code (Improved API Implementation):
+* User Code (Improved API Implementation):
 .code server_better.go /START SERVICE IMPLEMENTATION OMIT/,/END SERVICE IMPLEMENTATION OMIT/
 - Auto-generated code translates `repeated` to an array, `enum` to consts.
 
-* User code (Improved API Summary):
-  $ go run server_better.go add_better.pb.go
-  $ go run client_better.go add_better.pb.go 0 1 2
-  $ go run client_better.go add_better.pb.go 1 1 2 3
+* User Code (Improved API Server):
+.play server_better.go /func main/,/^}/
+
+* User Code (Improved API Client):
+.play client_better.go /func main/,/^}/
+
+
+* User Code (Secure Server):
+.play server_tls.go /func main/,/^}/
+
+* User Code Summary:
 
 - Lots more features: [[https://developers.google.com/protocol-buffers/docs/proto3]]
 - [[https://github.com/grpc/grpc-go][grpc-go]] has okay documentation, but remember you generate a code file; try different things, see how they translate into Go code, pick what you like.

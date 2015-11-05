@@ -5,7 +5,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
 
-	pb "./proto"
+	pb "github.com/ppg/grpc-intro/proto"
 )
 
 func main() {

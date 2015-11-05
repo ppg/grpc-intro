@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
 
-	pb "./proto"
+	pb "github.com/ppg/grpc-intro/proto"
 )
 
 func main() {
